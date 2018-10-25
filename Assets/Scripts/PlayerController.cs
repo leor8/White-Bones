@@ -23,8 +23,13 @@ public class PlayerController : MonoBehaviour {
   public float MAX_HEALTH = 100;
   public bool inProgress;
 
-  //
-
+  // Player Switching
+  // private string[] characters = ["Wu", "Zhu", "Bai", "Sha", "Tang"];
+  public Sprite[] characters;
+  public bool[] isConvinced = {true, false, false, false, false};
+  public int currentCharacter = 0;
+  private bool switched = false;
+  private int switch_cd = 30;
 	// Use this for initialization
 	void Start () {
     rb = GetComponent<Rigidbody2D>();
@@ -65,6 +70,26 @@ public class PlayerController : MonoBehaviour {
           rb.velocity = new Vector2(0, rb.velocity.y);
       }
 
+      // Switching character
+      if(Input.GetKey(switch_char)) {
+        SwitchCharacter();
+      }
+
+      if(health <= 0) {
+        isConvinced[currentCharacter] = false;
+        SwitchCharacter();
+        health = 100;
+      }
+
+      if(switched) {
+        switch_cd--;
+        if(switch_cd <= 0) {
+          switched = false;
+          switch_cd = 30;
+        }
+      }
+
+
     }
 
 
@@ -76,6 +101,30 @@ public class PlayerController : MonoBehaviour {
       inProgress = true;
     } else {
       inProgress = false;
+    }
+  }
+
+  private void SwitchCharacter() {
+    int i;
+    if(currentCharacter < isConvinced.Length - 1) {
+      i = currentCharacter + 1;
+    } else {
+      i = 0;
+    }
+    while(!switched) {
+      print(i);
+      if(isConvinced[i]) {
+        currentCharacter = i;
+        SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+        sr.sprite = characters[i];
+        switched = true;
+      } else {
+        if(i < isConvinced.Length - 1) {
+          i++;
+        } else {
+          i = 0;
+        }
+      }
     }
   }
 

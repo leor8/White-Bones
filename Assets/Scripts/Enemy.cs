@@ -9,6 +9,7 @@ public class Enemy : MonoBehaviour {
   SpriteRenderer mySpriteRenderer;
   private bool counted = false;
   private int countdown = 10;
+  public bool destroyed = false;
 	// Use this for initialization
 	void Start () {
     mySpriteRenderer = GetComponent<SpriteRenderer>();
@@ -19,6 +20,7 @@ public class Enemy : MonoBehaviour {
     // print(health);
     if(health <= 0) {
       Destroy(gameObject);
+      destroyed = true;
     }
 
     if(counted) {
@@ -36,5 +38,9 @@ public class Enemy : MonoBehaviour {
     health -= damage;
     mySpriteRenderer.color = new Color(1, 1, 1, 0.3f);
     counted = true;
+  }
+
+  void OnTriggerStay2D(Collider2D coll) {
+    coll.GetComponent<PlayerController>().health--;
   }
 }
