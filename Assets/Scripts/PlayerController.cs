@@ -30,6 +30,8 @@ public class PlayerController : MonoBehaviour {
   public int currentCharacter = 0;
   private bool switched = false;
   private int switch_cd = 30;
+  private bool dead = false;
+
 	// Use this for initialization
 	void Start () {
     rb = GetComponent<Rigidbody2D>();
@@ -75,7 +77,17 @@ public class PlayerController : MonoBehaviour {
         SwitchCharacter();
       }
 
-      if(health <= 0) {
+      // Check if all characters are dead
+      for(int i = 0; i < isConvinced.Length; i++) {
+        if(isConvinced[i]) {
+          break;
+        } else if (i == isConvinced.Length - 1 && !isConvinced[i]) {
+          Destroy(gameObject);
+          dead = true;
+        }
+      }
+
+      if(health <= 0 && !dead) {
         isConvinced[currentCharacter] = false;
         SwitchCharacter();
         health = 100;
