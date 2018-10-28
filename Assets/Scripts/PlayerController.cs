@@ -32,6 +32,18 @@ public class PlayerController : MonoBehaviour {
   private int switch_cd = 30;
   private bool dead = false;
 
+  // Shrinking monkey
+  public float targetScale = 0.1f;
+  public float shrinkSpeed = 0.1f;
+  private bool shrinking = false;
+  private bool growing = true;
+  private bool shrunk = false;
+  private float targetGrow;
+
+  // Heal pig
+  private bool healed = false;
+  private int heal_cd = 7200;
+
 	// Use this for initialization
 	void Start () {
     rb = GetComponent<Rigidbody2D>();
@@ -40,17 +52,13 @@ public class PlayerController : MonoBehaviour {
     right = KeyCode.RightArrow;
     jump = KeyCode.UpArrow;
     switch_char = KeyCode.DownArrow;
+
+    targetGrow = gameObject.transform.localScale.x;
 	}
 
 	// Update is called once per frame
 	void Update () {
     if(!inProgress) {
-      if(rb.velocity.y == 0) {
-        isGrounded = true;
-      } else {
-        isGrounded = false;
-      }
-
       if(isGrounded) {
         mid_air = true;
       }
@@ -76,6 +84,46 @@ public class PlayerController : MonoBehaviour {
       if(Input.GetKey(switch_char)) {
         SwitchCharacter();
       }
+
+      // Abilities
+      // Monkey King
+      if(currentCharacter == 0) {
+        if(growing && Input.GetKey(KeyCode.B)) {
+          shrinking = true;
+        } if (shrunk && Input.GetKey(KeyCode.B)) {
+          shrunk = false;
+        }
+
+        if (shrinking) {
+           gameObject.transform.localScale -= Vector3.one*Time.deltaTime*shrinkSpeed;
+           if (gameObject.transform.localScale.x < targetScale) {
+              shrinking = false;
+              growing = false;
+              shrunk = true;
+            }
+        }
+
+        if(!shrunk && !growing) {
+          gameObject.transform.localScale += Vector3.one*Time.deltaTime*shrinkSpeed;
+           if (gameObject.transform.localScale.x > targetGrow) {
+              growing = true;
+              shrunk = false;
+            }
+        }
+      } else if (currentCharacter == 1) {
+        if(Input.GetKey(KeyCode.B) && !healed) {
+          health += 50;
+          healed = true;
+        }
+      }
+      // Pig heal cooldown will be counted even in other form
+      if(healed) {
+          heal_cd--;
+          if(heal_cd <= 0) {
+            heal_cd = 7200;
+            healed = false;
+          }
+        }
 
       // Check if all characters are dead
       for(int i = 0; i < isConvinced.Length; i++) {
@@ -103,10 +151,35 @@ public class PlayerController : MonoBehaviour {
 
 
     }
-
-
-
 	}
+
+  public void TakeDamage(int amount) {
+
+  }
+
+  public void DealDamage(int amount) {
+
+  }
+
+  void OnCollisionEnter2D(Collision2D coll) {
+    if(coll.gameObject.CompareTag("ground")){
+      isGrounded = true;
+    }
+
+    if(coll.gameObject.CompareTag("Climbable")) {
+      rb.gravityScale = 0;
+    }
+  }
+
+  void OnCollisionExit2D(Collision2D coll) {
+    if(coll.gameObject.CompareTag("ground")){
+      isGrounded = false;
+    }
+
+    if(coll.gameObject.CompareTag("Climbable")) {
+      rb.gravityScale = 1;
+    }
+  }
 
   public void SetActive(bool state) {
     if(!state) {
@@ -123,8 +196,7 @@ public class PlayerController : MonoBehaviour {
     } else {
       i = 0;
     }
-    while(!switched) {
-      print(i);
+    while(!switched && !shrunk) {
       if(isConvinced[i]) {
         currentCharacter = i;
         SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();

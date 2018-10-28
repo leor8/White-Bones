@@ -34,7 +34,6 @@ public class Enemy : MonoBehaviour {
 	}
 
   public void TakeDamage(int damage) {
-    print("here");
     health -= damage;
     mySpriteRenderer.color = new Color(1, 1, 1, 0.3f);
     counted = true;

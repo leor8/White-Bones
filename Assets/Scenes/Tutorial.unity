@@ -1277,6 +1277,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 723cc84ea06ac417d9910f36a2cf1a75, type: 3}
   isConvinced: 0101010101
   currentCharacter: 0
+  targetScale: 0.1
+  shrinkSpeed: 0.1
 --- !u!114 &770900781
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1823,7 +1825,7 @@ GameObject:
   - component: {fileID: 1443060653}
   m_Layer: 12
   m_Name: GrassJoinHillLeft
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2053,7 +2055,7 @@ GameObject:
   - component: {fileID: 1555495504}
   m_Layer: 12
   m_Name: GrassJoinHillLeft (1)
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2265,12 +2267,14 @@ MonoBehaviour:
   - I have to get up and find Master Tang...
   - Where is this place?
   - And what is that overthere? That looks like something I can use.
+  - 'TUTORIAL: Collect heal potion by simply Contact it.'
   sentences2:
   - 'Good Stuff... I got some enegy now. '
   - Time to head to White-Boned Demon's Cave and save Master Tang
   - Umm... I still remeber how strong is the White-Boned Demon
   - Maybe I should look for some help first.
   - WAIT! What is that?
+  - 'TUTORIAL: Go closer to the monster and hit spacebar to attack'
   typingSpeed: 0.001
   Panel: {fileID: 1217719303}
   Player: {fileID: 770900775}
@@ -2458,7 +2462,7 @@ GameObject:
   - component: {fileID: 2025817564}
   m_Layer: 12
   m_Name: GrassJoinHillLeft (2)
-  m_TagString: Untagged
+  m_TagString: ground
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
