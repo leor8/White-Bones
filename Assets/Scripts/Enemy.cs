@@ -42,4 +42,8 @@ public class Enemy : MonoBehaviour {
   void OnTriggerStay2D(Collider2D coll) {
     coll.GetComponent<PlayerController>().health--;
   }
+
+  public void AlterHealth(int hp) {
+    health = hp;
+  }
 }

@@ -44,6 +44,9 @@ public class PlayerController : MonoBehaviour {
   private bool healed = false;
   private int heal_cd = 7200;
 
+  // Jump horse
+  private bool jumped = false;
+
 	// Use this for initialization
 	void Start () {
     rb = GetComponent<Rigidbody2D>();
@@ -115,15 +118,42 @@ public class PlayerController : MonoBehaviour {
           health += 50;
           healed = true;
         }
+      } else if (currentCharacter == 2) {
+        if(Input.GetKeyDown(KeyCode.B) && !jumped) {
+          print("jumped");
+          jumpForce += 5;
+          doubleJumpForce += 5;
+          jumped = true;
+        } else if(Input.GetKeyDown(KeyCode.B) && jumped) {
+          print("unjump");
+          jumpForce -= 5;
+          doubleJumpForce -= 5;
+          jumped = false;
+        }
       }
       // Pig heal cooldown will be counted even in other form
       if(healed) {
-          heal_cd--;
-          if(heal_cd <= 0) {
-            heal_cd = 7200;
-            healed = false;
-          }
+        heal_cd--;
+        if(heal_cd <= 0) {
+          heal_cd = 7200;
+          healed = false;
         }
+      }
+
+      // Make sure other character wont jump higher
+      if(jumped && currentCharacter != 2) {
+        jumpForce -= 5;
+        doubleJumpForce -= 5;
+        jumped = false;
+      }
+
+      if(shrunk && currentCharacter != 0) {
+        gameObject.transform.localScale += Vector3.one*Time.deltaTime*shrinkSpeed;
+         if (gameObject.transform.localScale.x > targetGrow) {
+            growing = true;
+            shrunk = false;
+          }
+      }
 
       // Check if all characters are dead
       for(int i = 0; i < isConvinced.Length; i++) {
@@ -154,7 +184,7 @@ public class PlayerController : MonoBehaviour {
 	}
 
   public void TakeDamage(int amount) {
-
+    health -= amount;
   }
 
   public void DealDamage(int amount) {
@@ -167,7 +197,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     if(coll.gameObject.CompareTag("Climbable")) {
-      rb.gravityScale = 0;
+      rb.gravityScale = 2.5f;
     }
   }
 
@@ -209,6 +239,14 @@ public class PlayerController : MonoBehaviour {
           i = 0;
         }
       }
+    }
+  }
+
+  public void DialogCharacterSwitch(int index) {
+    if(isConvinced[index]) {
+      currentCharacter = index;
+      SpriteRenderer sr = gameObject.GetComponent<SpriteRenderer>();
+      sr.sprite = characters[index];
     }
   }
 

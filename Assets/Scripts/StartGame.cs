@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class Lvl1 : MonoBehaviour {
-  public Enemy enemy;
+public class StartGame : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
@@ -16,10 +15,7 @@ public class Lvl1 : MonoBehaviour {
 
 	}
 
-  void OnTriggerEnter2D(Collider2D coll) {
-    if(enemy.destroyed) {
-      SceneManager.LoadScene(2);
-    }
-
+  public void Tutorial() {
+    SceneManager.LoadScene(1);
   }
 }
